@@ -1,0 +1,21 @@
+rules:
+  - metric: total_trips
+    grain: daily
+    methods:
+      - name: z_score
+        threshold: 3.0
+      - name: dow_baseline
+        threshold_pct: 0.20
+        severity: warning
+
+  - metric: total_revenue
+    grain: daily
+    methods:
+      - name: z_score
+        threshold: 3.0
+
+  - metric: avg_fare
+    grain: daily
+    methods:
+      - name: z_score
+        threshold: 4.0 # Fare is noisy

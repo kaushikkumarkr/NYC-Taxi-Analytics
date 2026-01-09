@@ -1,0 +1,12 @@
+analytics:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      threads: 4
+      host: localhost
+      port: 5432
+      user: admin
+      pass: adminparams
+      dbname: analytics
+      schema: dbt_dev

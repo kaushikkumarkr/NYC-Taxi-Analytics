@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: warehouse_pg
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminparams
+      POSTGRES_DB: analytics
+    volumes:
+      - ./warehouse/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d analytics" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Dagster
+  dagster_daemon:
+    image: python:3.9-slim
+    container_name: dagster_daemon
+    working_dir: /opt/dagster/app
+    volumes:
+      - ./:/opt/dagster/app
+    environment:
+      DAGSTER_PG_PASSWORD: adminparams
+      DAGSTER_PG_HOST: postgres
+    # For simplicity in this demo, we install deps at runtime or build a custom image. 
+    # To keep it "Compose only" with standard images, we'll install on boot or use a Dockerfile.
+    # User requested "Run locally via Docker Compose". We will bind mount and install deps.
+    # User requested "Run locally via Docker Compose". We will bind mount and install deps.
+    command: /bin/bash -c "apt-get update && apt-get install -y git && pip install -e . && dagster-daemon run"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  dagster_webserver:
+    image: python:3.9-slim
+    container_name: dagster_webserver
+    working_dir: /opt/dagster/app
+    volumes:
+      - ./:/opt/dagster/app
+    ports:
+      - "3000:3000"
+    command: /bin/bash -c "apt-get update && apt-get install -y git && pip install -e . && dagster-webserver -h 0.0.0.0 -p 3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Superset
+  superset:
+    build:
+      context: ./docker/superset
+    container_name: superset
+    ports:
+      - "8088:8088"
+    environment:
+      SUPERSET_SECRET_KEY: "TEST_SECRET_KEY_CHANGE_IN_PROD"
+      # In a real setup, we'd configure the metastore to use our Postgres.
+      # For this demo, we can let Superset use its internal SQLite for metadata 
+      # but connect to our Postgres for the Data Warehouse.
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      /bin/bash -c "
+        superset fab create-admin --username admin --firstname Superset --lastname Admin --email admin@superset.com --password admin &&
+        superset db upgrade &&
+        superset init &&
+        /usr/bin/run-server.sh"
+
+volumes:
+  postgres_data:

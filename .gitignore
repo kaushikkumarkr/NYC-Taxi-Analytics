@@ -1,0 +1,25 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# System
+.DS_Store
+
+# Secrets
+.env
+.env.prod
+
+# Data (Don't commit large raw files)
+data/raw/*.parquet
+data/raw/*.csv
+!data/raw/taxi_zone_lookup.csv
+
+# dbt
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+
+# Dagster
+dagster_home/
