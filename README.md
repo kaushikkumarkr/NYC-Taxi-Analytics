@@ -1,5 +1,5 @@
 # 🚖 NYC Taxi Analytics Command Center
-> **A End-to-End Analytics Platform for Fleet Optimization, Revenue Intelligence, and Demand Forecasting.**
+> **An End-to-End Analytics Platform for Fleet Optimization, Revenue Intelligence, and Demand Forecasting.**
 
 [![Status](https://img.shields.io/badge/Project-Complete-green?style=for-the-badge)]()
 [![Role](https://img.shields.io/badge/Role-Analytics%20Engineer-orange?style=for-the-badge)]()
@@ -86,7 +86,7 @@ We moved beyond descriptive analytics ("What happened?") to predictive analytics
 ## 🛠 Technical Deep Dive (How I Built It)
 
 ### 💾 Data Warehouse (PostgreSQL)
-I chose postgres for its reliability and ability to handle millions of rows on a single node.
+I chose **PostgreSQL** for its reliability and ability to handle millions of rows on a single node.
 *   **Schema Design**:
     *   `raw`: Untouched data (EL).
     *   `staging`: Lightly cleaned views.
