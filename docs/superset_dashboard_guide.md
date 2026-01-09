@@ -116,6 +116,32 @@ Go to **Datasets** -> **+ Dataset**. Add the following tables from `dbt_dev_mart
     -   Query B: `forecast_trips` (Predicted Trips)
 4.  **Save as**: `Trip Forecast vs Actual`
 
+### Chart Group G: The Analyst KPI Grid 📉
+**Goal**: Visualizing the specific "Business Value" metrics defined in the README.
+
+#### G1. Revenue Per Mile (Efficiency)
+-   **Dataset**: `mart_kpis_daily`
+-   **metric**: `SUM(revenue_per_mile)` -> Aggregate: `AVG`
+-   **Label**: "Rev Per Mile ($)"
+
+#### G2. Demand Intensity (Pressure)
+-   **Dataset**: `mart_kpis_hourly`
+-   **Metric**: `SUM(trips_per_hour_avg)` -> Aggregate: `AVG`
+-   **Time Range**: Last 24 Hours
+-   **Label**: "Trips/Hour (Intensity)"
+
+#### G3. Congestion Exposure (Tax Impact)
+-   **Dataset**: `mart_kpis_daily`
+-   **Metric**: `AVG(pct_congestion_trips)`
+-   **Format**: Percentage (%)
+-   **Label**: "% Congestion Routes"
+
+#### G4. Tip Rate (Satisfaction)
+-   **Dataset**: `mart_kpis_daily`
+-   **Metric**: `AVG(tip_rate)`
+-   **Format**: Percentage (%)
+-   **Label**: "Avg Tip Rate"
+
 ## 4. Assemble Dashboard
 1.  Go to **Dashboards** -> **+ Dashboard**.
 2.  Title: "Analytics Command Center".
