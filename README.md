@@ -57,11 +57,11 @@ Metrics are only useful if they drive action. I defined 5 Core Metrics for the f
 
 | Metric | Definition | Why it matters? |
 | :--- | :--- | :--- |
-| **Revenue Per Mile (RPM)** | `Total Revenue / Trip Distance` | The "True North" metric for efficiency. High RPM means the driver is earning more for every mile driven. |
-| **Utilization Rate** | `Minutes w/ Passenger / Total Shift Minutes` | Tracks downtime. Low utilization indicates oversupply in a zone. |
-| **Average Fare** | `Total Revenue / Total Trips` | Monitors pricing power and trip quality. |
-| **Tip Rate** | `Tip Amount / Fare Amount` | A proxy for Customer Satisfaction (CSAT). |
-| **Congestion Exposure** | `% of trips in Surcharge Zones` | Identifies how much profit is lost to city taxes. |
+| **Financial** | **Revenue Per Mile (RPM)** | `Total Revenue / Trip Distance` | The "True North" metric for efficiency. High RPM means the driver is earning more for every mile driven. |
+| **Operational** | **Demand Intensity** | `Trips per Hour (Avg)` | Measures fleet pressure. High intensity signals a need for more supply in that zone. |
+| **Financial** | **Average Fare** | `Total Revenue / Total Trips` | Monitors pricing power and trip quality. |
+| **Quality** | **Tip Rate** | `Tip Amount / Fare Amount` | A proxy for Customer Satisfaction (CSAT). |
+| **Operational** | **Congestion Exposure** | `% of trips in Surcharge Zones` | Identifies how much profit is lost to city taxes. |
 
 ### 2. The Insight Dashboard ("Command Center")
 The Superset dashboard serves as the daily operational view.

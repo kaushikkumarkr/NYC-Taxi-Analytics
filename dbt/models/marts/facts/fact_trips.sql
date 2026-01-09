@@ -29,6 +29,7 @@ select
     trips.tip_amount,
     trips.tolls_amount,
     trips.improvement_surcharge,
+    trips.congestion_surcharge,
     trips.total_amount,
     trips.payment_type,
     
