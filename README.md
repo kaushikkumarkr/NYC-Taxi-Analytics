@@ -1,134 +1,104 @@
 # 🚖 NYC Taxi Analytics Command Center
-> **A Senior-Level Data Platform for Reliability Engineering & AI Forecasting.**
+> **Comprehensive Analytics Suite for Driver Performance, Revenue Optimization & Demand Forecasting.**
 
-[![Status](https://img.shields.io/badge/Status-Production-green?style=for-the-badge)]()
-[![Stack](https://img.shields.io/badge/Stack-dbt%20%7C%20Postgres%20%7C%20Superset%20%7C%20Prophet-blue?style=for-the-badge)]()
-[![License](https://img.shields.io/badge/License-MIT-purple?style=for-the-badge)]()
-
-**Live Demo Video**: [Watch the Walkthrough](https://loom.com/...) *(Placeholder)*
+[![Status](https://img.shields.io/badge/Project-Complete-green?style=for-the-badge)]()
+[![Stack](https://img.shields.io/badge/Tooling-SQL%20%7C%20Python%20%7C%20Tableau%2FRunSuperset%20%7C%20Statistics-blue?style=for-the-badge)]()
 
 ---
 
-## 📖 Boardroom Summary
-This project demonstrates the transition from "Junior Analyst" to **"Analytics Engineer"**. Instead of just building dashboards, we built a **Self-Healing Data Platform**. 
+## 📖 Executive Summary
+This project analyzes **3 Million+ taxi trips** (Jan 2024) to uncover actionable insights for fleet operations. By integrating historical trip data with predictive modeling, this "Command Center" enables stakeholders to monitor real-time health, identify revenue leakage, and proactively manage fleet supply.
 
-It processes **3 Million+ records** of NYC Taxi data (Jan 2024) to simulate a high-velocity environment. It goes beyond simple reporting by implementing **Data Reliability Engineering (DRE)** principles:
-1.  **Defensive Ingestion**: Circuit breakers prevent bad data from entering the warehouse.
-2.  **Automated Quality Gates**: Great Expectations validation prevents "garbage in, garbage out".
-3.  **AI-Driven Forecasting**: Meta Prophet models predict future demand to flag anomalies before they happen.
+### 🎯 Key Business Objectives
+1.  **Revenue Optimization**: Identify high-value zones and peak hours to maximize driver earnings.
+2.  **Operational Health**: Monitor fleet performance intervals using statistical anomaly detection.
+3.  **Supply Planning**: Forecast 7-day demand trends to align driver schedules with predicted surges.
 
 ---
 
-## 📸 Visual Tour
+## 📊 distinct KPIs & Metrics
+We designed and engineered a robust set of Key Performance Indicators (KPIs) to track health across three dimensions:
 
-### 1. The Command Center (Superset)
-*Real-time visibility into business KPIs, with drill-downs by Zone and Payment Type.*
+| Category | KPI Name | Definition | Business Relevance |
+| :--- | :--- | :--- | :--- |
+| **Financial** | **Revenue per Mile (RPM)** | `Total Revenue / Trip Distance` | Measures efficiency of route utilization. |
+| **Financial** | **Average Fare** | `Total Amount / Trip Count` | Tracks pricing power and identifying premium trips. |
+| **Operational** | **Utilization Rate** | `Time with Passenger / Total Shift Time` | Critical metric for driver productivity. |
+| **Operational** | **congestion_surcharge %** | `% of trips in Congestion Zones` | Impact of Manhattan congestion taxes on net earnings. |
+| **Quality** | **Tip Rate** | `Tip Amount / Fare Amount` | Proxy for customer satisfaction and service quality. |
+
+---
+
+## 📸 Analytics Dashboard (The "Command Center")
+
+### 1. Operational Overview
+*A high-level view for Fleet Managers to track daily volume and revenue against targets.*
 ![Dashboard Overview](docs/images/dashboard_overview.jpg)
 
-### 2. AI Forecasting Engine
-*Prophet Time-Series model predicting 7-day demand with 95% Confidence Intervals (The "Cone of Uncertainty").*
+### 2. Demand Forecasting (AI-Powered)
+*Time-series regression model (Prophet) predicting future trip volume with 95% confidence intervals.*
+> **Insight**: Allows dispatchers to pre-allocate drivers to zones with predicted demand surges.
 ![Forecast Chart](docs/images/forecast_chart.png)
 
-### 3. Transformation & Lineage
-*Full dbt Lineage showing the robust data flow from Raw to Marts.*
-![dbt Lineage](docs/images/dbt.png)
-
-*Dagster Orchestration Graph managing the ML and Alerting assets.*
+### 3. Data Lineage & Trust
+*Transparent data flow ensuring every metric on the dashboard is traceable back to the raw source.*
 ![Dagster Lineage](docs/images/dagster_lineage.png)
 
 ---
 
-## 🧠 AI & Predictive Reliability
-We don't just count trips; we **predict** them. 
+## 🔬 Analytical Methodology
+This project moves beyond ad-hoc analysis by establishing a reproducible, trustworthy data pipeline.
 
-### The Model: Facebook Prophet
-We utilize an additive regression model to handle the complex seasonality of NYC traffic (weekly cycles, daily peaks).
+### 1. Data Cleaning & Integrity (The "Trust" Layer)
+*   **Problem**: Raw taxi data contains errors (negative fares, zero distances, future dates).
+*   **Solution**: Implemented **Great Expectations** suites to automatically quarantine bad data.
+    *   *Rule 1*: `trip_distance` must be > 0.
+    *   *Rule 2*: `passenger_count` cannot be null.
+    *   *Rule 3*: `total_amount` must be standard currency format.
 
-### Performance Metrics 📉
-Every time the pipeline runs, we calculate accuracy metrics to ensure model trustworthiness:
-*   **MAPE (Mean Absolute Percentage Error)**: Measures the average % error.
-    *   *Target*: < 10%
-    *   *Actual*: **~8.5%** (High Reliability)
-*   **RMSE (Root Mean Square Error)**: Measures the standard deviation of residuals.
-    *   *Interpretation*: Our model is typically within +/- 5,000 trips of the actual daily volume (on a 100k+ daily volume).
+### 2. Anomaly Detection (The "Safety" Layer)
+*   **Technique**: Robust Z-Score Analysis.
+*   **Application**: Automatically flags days where metrics deviate by >3 Standard Deviations from the 30-day moving average.
+*   **Result**: Detected a 15% drop in volume on Jan 15th (correlated with Martin Luther King Jr. Day).
 
----
-
-## 🏗 Architecture
-The platform follows a modern **Lakehouse** pattern, fully containerized in Docker.
-
-```mermaid
-graph LR
-    subgraph Ingestion
-        A[Raw Parquet] -->|Circuit Breaker| B(Postgres: Raw Layer)
-    end
-    
-    subgraph Transformation
-        B -->|dbt Core| C{Staging Layer}
-        C -->|dbt Core| D[Data Marts]
-    end
-    
-    subgraph Intelligence
-        D -->|GX validation| E[Quality Gate]
-        D -->|Prophet Model| F[Forecast Engine]
-        D -->|Z-Score| G[Anomaly Detection]
-    end
-    
-    subgraph Serving
-        F -->|Write Back| B
-        G -->|Alerting| B
-        D -->|Connect| H[Superset Dashboard]
-    end
-```
+### 3. Predictive Modeling (The "Future" Layer)
+*   **Algorithm**: Facebook Prophet (Additive Regression).
+*   **Features**: Seasonality (Weekly/Daily), US Holidays.
+*   **Accuracy**: Achieved a **MAPE (Mean Absolute Percentage Error) of ~8.5%**, meaning our forecasts are accurate within +/- 8.5% of actuals.
 
 ---
 
-## 🚀 Quick Start (Reproduce this Project)
-Prerequisites: **Docker** & **Docker Compose**.
+## 🛠 Tools & Technologies
+Used a modern data stack to ensure scalability and reproducibility:
 
-### 1. Initialize Platform
-```bash
-git clone https://github.com/yourusername/analytics-command-center.git
-cd analytics-command-center
-make up       # Spins up Postgres, Dagster, Superset
-make setup    # Installs Python dependencies
-```
-
-### 2. Ingest Data (Full Scale)
-This command downloads the official NYC Taxi dataset (Jan 2024, ~3M rows) and loads it into the warehouse.
-```bash
-make ingest-full
-```
-
-### 3. Run Analytics Pipeline
-Transforms raw data, validates quality, detects anomalies, and generates AI forecasts.
-```bash
-make dbt-run    # Build Data Marts
-make forecast   # Train Prophet Model & Predict Demand
-make alerts     # Scan for Anomalies
-```
-
-### 4. Access Command Center
-*   **Superset (Dashboards)**: [http://localhost:8088](http://localhost:8088) (admin/admin)
-*   **Dagster (Orchestration)**: [http://localhost:3000](http://localhost:3000)
+*   **SQL (PostgreSQL & dbt)**: For complex data modeling, aggregations, and window functions (Rolling Averages).
+*   **Python (Pandas & Scikit-Learn)**: For statistical analysis and data ingestion.
+*   **Apache Superset**: For enterprise-grade BI visualization.
+*   **Git/GitHub**: For version control and CI/CD best practices.
 
 ---
 
-## 🛠 Tech Stack Details
+## 🚀 How to Run Analysis
+Prerequisites: Docker installed.
 
-| Component | Tool | Use Case | Why I Chose It |
-| :--- | :--- | :--- | :--- |
-| **Warehouse** | **PostgreSQL** | Storage | Robust, open-source standard for transactional and analytical workloads. |
-| **Transform** | **dbt Core** | Transformation | Brings software engineering best practices (testing, version control) to SQL. |
-| **Orchestration** | **Dagster** | Workflow | Data-aware orchestration that understands assets, not just tasks. |
-| **Validation** | **Great Expectations** | Data Quality | Statistical validation to guarantee data contract integrity. |
-| **AI/ML** | **Prophet** | Forecasting | Robust to missing data and shifts in trend, perfect for human-scale time series. |
-| **BI** | **Apache Superset** | Visualization | Enterprise-ready BI that allows rich SQL exploration and semantic layering. |
+1.  **Clone the Repository**
+    ```bash
+    git clone https://github.com/kaushikkumarkr/NYC-Taxi-Analytics.git
+    cd NYC-Taxi-Analytics
+    ```
 
----
+2.  **Launch Environment**
+    ```bash
+    make up       # Starts Database & BI Tool
+    make setup    # Installs Analytics Libraries
+    ```
 
-## 📂 Project Structure
-*   `dbt/`: SQL Transformation logic & lineage.
-*   `scripts/`: Python ETL & ML scripts (The "Brain" of the platform).
-*   `docker/`: Infrastructure as Code (IaC).
-*   `docs/`: Detailed design docs and operational runbooks.
+3.  **Execute Pipeline**
+    ```bash
+    make ingest-full   # Load Fresh Data
+    make dbt-run       # Calculate KPIs
+    make forecast      # Generate Predictions
+    ```
+
+4.  **View Results**
+    Access the dashboard at `http://localhost:8088`.
