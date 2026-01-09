@@ -155,9 +155,3 @@ make forecast   # 3. Train AI Model & Predict Next Week
 
 ---
 
-### 👤 Author
-**Kaushik Kumar**
-*   *Aspiring Analytics Engineer & Data Strategist*
-*   [LinkedIn Profile](https://linkedin.com/in/...) *(Add your link)*
-*   [Portfolio Site](...) *(Add your link)*
-
